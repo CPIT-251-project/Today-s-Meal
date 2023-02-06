@@ -11,23 +11,28 @@ import org.json.JSONObject;
 
 public class RecipeSearch {
 
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Enter ingredients to search: ");
-        String ingredients = scan.nextLine();
+        public static void main(String[] args) {
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Enter ingredients to search: ");
+            String ingredients = scan.nextLine();
 
-        try {
-            JSONArray results = getRecipe(ingredients);
+            try {
+                JSONArray results = getRecipe(ingredients);
 
-            for (int i = 0; i < results.length(); i++) {
-                JSONObject recipe = results.getJSONObject(i);
-                System.out.println(i+1+"- Title: " + recipe.getString("title"));
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject recipe = results.getJSONObject(i);
+                    System.out.println(i + 1 + "- Title: " + recipe.getString("title"));
+                }
+
+                System.out.println("Enter recipe number to view instructions: ");
+                int recipeNum = scan.nextInt();
+
+                JSONObject recipe = results.getJSONObject(recipeNum - 1);
                 System.out.println("Instructions: " + getInstructions(recipe.getInt("id")));
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
         }
-    }
 
     public static JSONArray getRecipe(String ingredients) throws IOException {
 
