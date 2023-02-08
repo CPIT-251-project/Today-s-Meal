@@ -29,6 +29,7 @@ public class RecipeSearch {
 
                 JSONObject recipe = results.getJSONObject(recipeNum - 1);
                 System.out.println("Instructions: " + getInstructions(recipe.getInt("id")));
+                System.out.println("Calories: " + getCalories(recipe.getInt("id")));
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
             }
@@ -77,6 +78,23 @@ public class RecipeSearch {
         }
 
         return instructions.toString();
+    }
+    public static String getCalories(int recipeId) throws IOException {
+        URL url = new URL("https://api.spoonacular.com/recipes/" + recipeId + "/nutritionWidget.json?apiKey=" + "b1270e9e454342f182aee416420012a0");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String Line;
+        StringBuilder content = new StringBuilder();
+        while ((Line = in.readLine()) != null) {
+            content.append(Line);
+        }
+        in.close();
+        con.disconnect();
+
+        JSONObject recipeInfo = new JSONObject(content.toString());
+        String calories = recipeInfo.getString("calories");
+        return calories;
     }
 
 }
