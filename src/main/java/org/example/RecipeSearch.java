@@ -39,32 +39,14 @@ public class RecipeSearch {
 
         URL url = new URL("https://api.spoonacular.com/recipes/findByIngredients?ingredients=" + ingredients
                 + "&apiKey=" + "b1270e9e454342f182aee416420012a0");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String Line;
-        StringBuilder content = new StringBuilder();
-        while ((Line = in.readLine()) != null) {
-            content.append(Line);
-        }
-        in.close();
-        con.disconnect();
+        StringBuilder content = getContent(url);
 
         JSONArray results = new JSONArray(content.toString());
         return results;
     }
     public static String getInstructions(int recipeId) throws IOException {
         URL url = new URL("https://api.spoonacular.com/recipes/" + recipeId + "/analyzedInstructions?apiKey=" + "b1270e9e454342f182aee416420012a0");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String Line;
-        StringBuilder content = new StringBuilder();
-        while ((Line = in.readLine()) != null) {
-            content.append(Line);
-        }
-        in.close();
-        con.disconnect();
+        StringBuilder content = getContent(url);
 
         JSONArray instructionsArray = new JSONArray(content.toString());
         StringBuilder instructions = new StringBuilder();
@@ -81,6 +63,13 @@ public class RecipeSearch {
     }
     public static String getCalories(int recipeId) throws IOException {
         URL url = new URL("https://api.spoonacular.com/recipes/" + recipeId + "/nutritionWidget.json?apiKey=" + "b1270e9e454342f182aee416420012a0");
+        StringBuilder content = getContent(url);
+
+        JSONObject recipeInfo = new JSONObject(content.toString());
+        String calories = recipeInfo.getString("calories");
+        return calories;
+    }
+    private static StringBuilder getContent(URL url) throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -91,10 +80,7 @@ public class RecipeSearch {
         }
         in.close();
         con.disconnect();
-
-        JSONObject recipeInfo = new JSONObject(content.toString());
-        String calories = recipeInfo.getString("calories");
-        return calories;
+        return content;
     }
 
 }
