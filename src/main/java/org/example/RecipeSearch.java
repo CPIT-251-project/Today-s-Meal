@@ -11,54 +11,66 @@ import org.json.JSONObject;
 
 public class RecipeSearch {
 
-        public static void main(String[] args) {
+        public static void main(String[] args) throws Exception {
             Scanner scan = new Scanner(System.in);
             while (true) {
-                System.out.println("\n-----------------------------------------------------------------");
-                System.out.println("---------------------Welcome to Today's Meal---------------------");
-                System.out.println("Enter your choice: ");
-                System.out.println("1. Search recipes");
-                System.out.println("2. Exit");
-
-                int choice = scan.nextInt();
-
-                switch (choice) {
-                    case 1:
-                        System.out.println("Enter ingredients to search: ");
-                        scan.nextLine();
-                        String ingredients = scan.nextLine();
-
-                        try {
-                            JSONArray results = getRecipe(ingredients);
-
-                            for (int i = 0; i < results.length(); i++) {
-                                JSONObject recipe = results.getJSONObject(i);
-                                System.out.println(i + 1 + "- Title: " + recipe.getString("title"));
-                            }
-
-                            System.out.println("Enter recipe number to view instructions: ");
-                            int recipeNum = scan.nextInt();
-
-                            JSONObject recipe = results.getJSONObject(recipeNum - 1);
-                            System.out.println("Instructions: " + getInstructions(recipe.getInt("id")));
-                            System.out.println("Calories: " + getCalories(recipe.getInt("id")));
-                            System.out.println("Thank you for using Today's Meal");
-                            System.exit(0);
-
-                        } catch (Exception e) {
-                            System.out.println("Error: " + e.getMessage());
-                        }
-                    case 2:
-                        System.out.println("Exiting Today's Meal. Have a great day!");
-                        System.exit(0);
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
-                        break;
+                try{
+                    display(scan);
+                }catch (Exception e){
+                    System.out.println("Error: " + e.getMessage());
+                    break;
                 }
             }
         }
 
+    public static void display(Scanner scan) {
+        System.out.println("\n-----------------------------------------------------------------");
+        System.out.println("---------------------Welcome to Today's Meal---------------------");
+        System.out.println("Enter your choice: ");
+        System.out.println("1. Search recipes");
+        System.out.println("2. Exit");
+        int choice = scan.nextInt();
 
+        try{
+        switch (choice) {
+            case 1:
+                System.out.println("Enter ingredients to search: ");
+                scan.nextLine();
+                String ingredients = scan.nextLine();
+
+                try {
+                    search(scan, ingredients);
+
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+            case 2:
+                System.out.println("Exiting Today's Meal. Have a great day!");
+                System.exit(0);
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
+        }}catch(Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+    public static void search(Scanner scan, String ingredients) throws IOException {
+        JSONArray results = getRecipe(ingredients);
+
+        for (int i = 0; i < results.length(); i++) {
+            JSONObject recipe = results.getJSONObject(i);
+            System.out.println(i + 1 + "- Title: " + recipe.getString("title"));
+        }
+
+        System.out.println("Enter recipe number to view instructions: ");
+        int recipeNum = scan.nextInt();
+
+        JSONObject recipe = results.getJSONObject(recipeNum - 1);
+        System.out.println("Instructions: " + getInstructions(recipe.getInt("id")));
+        System.out.println("Calories: " + getCalories(recipe.getInt("id")));
+        System.out.println("Thank you for using Today's Meal");
+        System.exit(0);
+    }
     public static JSONArray getRecipe(String ingredients) throws IOException {
 
         URL url = new URL("https://api.spoonacular.com/recipes/findByIngredients?ingredients=" + ingredients
@@ -82,7 +94,6 @@ public class RecipeSearch {
                 instructions.append((j + 1) + ". " + step.getString("step") + "\n");
             }
         }
-
         return instructions.toString();
     }
     public static String getCalories(int recipeId) throws IOException {
@@ -106,5 +117,4 @@ public class RecipeSearch {
         con.disconnect();
         return content;
     }
-
 }
