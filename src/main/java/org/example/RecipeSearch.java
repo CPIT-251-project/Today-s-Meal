@@ -24,6 +24,7 @@ public class RecipeSearch {
         }
 
     public static void display(Scanner scan) {
+        System.out.println("hi");
         System.out.println("\n-----------------------------------------------------------------");
         System.out.println("---------------------Welcome to Today's Meal---------------------");
         System.out.println("Enter your choice: ");
