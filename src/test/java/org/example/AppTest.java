@@ -1,6 +1,5 @@
 package org.example;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
@@ -23,7 +22,7 @@ class RecipeSearchTest {
     }
     @Test
     void shouldReturnCal() throws IOException {
-        assertEquals(RecipeSearch.getCalories(1),Rs.getCalories(1));
+     assertEquals(RecipeSearch.getCalories(1),Rs.getCalories(1));
     }
     @Test
     void shouldReturnException() throws IOException, Exception {
